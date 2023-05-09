@@ -1,8 +1,6 @@
 package user
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 	entity "online-course.mifwar.com/internal/user/entity"
 )
