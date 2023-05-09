@@ -33,7 +33,7 @@ func (rh *RegisterHandler) Register(ctx *gin.Context) {
 	err := rh.registerUseCase.Register(registerRequestInput)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, utils.Response(500, "internal server error", err))
+		ctx.JSON(http.StatusInternalServerError, utils.Response(500, "internal server error", err.Error()))
 		ctx.Abort()
 		return
 	}
