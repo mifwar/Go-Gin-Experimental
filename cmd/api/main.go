@@ -2,13 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	oauth "online-course.mifwar.com/internal/oauth/injector"
+	profile "online-course.mifwar.com/internal/profile/injector"
+	register "online-course.mifwar.com/internal/register/injector"
 	mysql "online-course.mifwar.com/pkg/db/mysql"
-
-	registerHandler "online-course.mifwar.com/internal/register/delivery/http"
-	registerUseCase "online-course.mifwar.com/internal/register/usecase"
-	userRepository "online-course.mifwar.com/internal/user/repository"
-	userUseCase "online-course.mifwar.com/internal/user/usecase"
-	mail "online-course.mifwar.com/pkg/mail/sendgrid"
 )
 
 func main() {
@@ -17,11 +14,9 @@ func main() {
 
 	r := gin.Default()
 
-	mail := mail.NewMail()
-	userRepository := userRepository.NewUserRepositoryImpl(db)
-	userUseCase := userUseCase.NewUserUseCase(userRepository)
-	registerUseCase := registerUseCase.NewRegisterUseCase(userUseCase, mail)
-	registerHandler.NewRegisterHandler(registerUseCase).Route(&r.RouterGroup)
+	register.InitializedService(db).Route(&r.RouterGroup)
+	oauth.InitializedService(db).Route(&r.RouterGroup)
+	profile.InitializedService(db).Route(&r.RouterGroup)
 
-	r.Run("localhost:8080")
+	r.Run()
 }
