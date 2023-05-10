@@ -4,6 +4,7 @@ import (
 	"math/rand"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	oauthDto "online-course.mifwar.com/internal/oauth/dto"
 )
 
@@ -17,7 +18,31 @@ func GenerateRandomString(number int) string {
 	return string(b)
 }
 
+func Paginate(offset, limit int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		page := offset
+
+		if page <= 0 {
+			page = 1
+		}
+
+		pageSize := limit
+
+		switch {
+		case pageSize > 100:
+			pageSize = 100
+		case pageSize <= 0:
+			pageSize = 10
+		}
+
+		offset := (page - 1) * limit
+		return db.Offset(offset).Limit(pageSize)
+
+	}
+}
+
 func GetCurrentUser(ctx *gin.Context) *oauthDto.MapClaimsResponse {
-	user := ctx.MustGet("user").(*oauthDto.MapClaimsResponse)
-	return user
+	user, _ := ctx.Get("user")
+
+	return user.(*oauthDto.MapClaimsResponse)
 }
