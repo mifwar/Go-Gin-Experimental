@@ -8,6 +8,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	adminUseCase "online-course.mifwar.com/internal/admin/usecase"
 	dto "online-course.mifwar.com/internal/oauth/dto"
 	entity "online-course.mifwar.com/internal/oauth/entity"
 	repository "online-course.mifwar.com/internal/oauth/repository"
@@ -25,6 +26,7 @@ type OauthUseCaseImpl struct {
 	oauthAccessTokenRepository  repository.OauthAccessTokenRepository
 	oauthRefreshTokenRepository repository.OauthRefreshTokenRepository
 	userUseCase                 userUseCase.UserUseCase
+	adminUseCase                adminUseCase.AdminUseCase
 }
 
 // Login implements OauthUseCase
@@ -37,17 +39,30 @@ func (usecase *OauthUseCaseImpl) Login(loginRequestBody dto.LoginRequestBody) (*
 
 	var user dto.UserResponse
 
-	// Login menggunakan user
-	dataUser, err := usecase.userUseCase.FindByEmail(loginRequestBody.Email)
+	//login using admin
+	if oauthClient.Name == "web-admin" {
+		dataAdmin, err := usecase.adminUseCase.FindByEmail(loginRequestBody.Email)
 
-	if err != nil {
-		return nil, errors.New("username or password is invalid")
+		if err != nil {
+			return nil, errors.New("email or password is invalid")
+		}
+
+		user.ID = dataAdmin.ID
+		user.Email = dataAdmin.Email
+		user.Password = dataAdmin.Password
+	} else {
+		// Login menggunakan user
+		dataUser, err := usecase.userUseCase.FindByEmail(loginRequestBody.Email)
+
+		if err != nil {
+			return nil, errors.New("username or password is invalid")
+		}
+
+		user.ID = dataUser.ID
+		user.Name = dataUser.Name
+		user.Email = dataUser.Email
+		user.Password = dataUser.Password
 	}
-
-	user.ID = dataUser.ID
-	user.Name = dataUser.Name
-	user.Email = dataUser.Email
-	user.Password = dataUser.Password
 
 	jwtKey := []byte(os.Getenv("JWT_SECRET"))
 
@@ -63,10 +78,14 @@ func (usecase *OauthUseCaseImpl) Login(loginRequestBody dto.LoginRequestBody) (*
 		ID:      user.ID,
 		Name:    user.Name,
 		Email:   user.Email,
-		IsAdmin: false,
+		IsAdmin: true,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
+	}
+
+	if oauthClient.Name != "web-admin" {
+		claims.IsAdmin = false
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -127,6 +146,14 @@ func NewOauthUseCase(
 	oauthAccessTokenRepository repository.OauthAccessTokenRepository,
 	oauthRefreshTokenRepository repository.OauthRefreshTokenRepository,
 	userUseCase userUseCase.UserUseCase,
+	adminUseCase adminUseCase.AdminUseCase,
 ) OauthUseCase {
-	return &OauthUseCaseImpl{oauthClientRepository, oauthAccessTokenRepository, oauthRefreshTokenRepository, userUseCase}
+	return &OauthUseCaseImpl{
+		oauthClientRepository,
+		oauthAccessTokenRepository,
+		oauthRefreshTokenRepository,
+		userUseCase,
+		adminUseCase,
+	}
+
 }
