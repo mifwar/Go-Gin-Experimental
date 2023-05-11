@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -45,4 +46,10 @@ func GetCurrentUser(ctx *gin.Context) *oauthDto.MapClaimsResponse {
 	user, _ := ctx.Get("user")
 
 	return user.(*oauthDto.MapClaimsResponse)
+}
+
+func GetFileName(filename string) string {
+	file := filepath.Base(filename)
+
+	return file[:len(file)-len(filepath.Ext(file))]
 }
