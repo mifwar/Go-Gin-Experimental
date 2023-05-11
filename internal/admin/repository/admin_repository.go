@@ -38,7 +38,7 @@ func (repository *AdminRepositoryImpl) Delete(entity entity.Admin) error {
 }
 
 // FindAll implements AdminRepository
-func (repository *AdminRepositoryImpl) FindAll(offset int, limit int) []entity.Admin {
+func (repository *AdminRepositoryImpl) FindAll(offset, limit int) []entity.Admin {
 	var admins []entity.Admin
 
 	repository.db.Scopes(utils.Paginate(offset, limit)).Find(&admins)
