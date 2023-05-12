@@ -5,6 +5,7 @@ import (
 
 	admin "online-course.mifwar.com/internal/admin/injector"
 	cart "online-course.mifwar.com/internal/cart/injector"
+	discount "online-course.mifwar.com/internal/discount/injector"
 	oauth "online-course.mifwar.com/internal/oauth/injector"
 	product "online-course.mifwar.com/internal/product/injector"
 	productCategory "online-course.mifwar.com/internal/product_category/injector"
@@ -25,8 +26,9 @@ func main() {
 	profile.InitializedService(db).Route(&r.RouterGroup)
 	admin.InitializedService(db).Route(&r.RouterGroup)
 	productCategory.InitializedService(db).Route(&r.RouterGroup)
-	product.InitiliazedService(db).Route(&r.RouterGroup)
-	cart.InitiliazedService(db).Route(&r.RouterGroup)
+	product.InitializedService(db).Route(&r.RouterGroup)
+	cart.InitializedService(db).Route(&r.RouterGroup)
+	discount.InitializedService(db).Route(&r.RouterGroup)
 
 	r.Run()
 }
