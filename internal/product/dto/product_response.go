@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 	adminEntity "online-course.mifwar.com/internal/admin/entity"
 	entity "online-course.mifwar.com/internal/product/entity"
-	ProductCategoryEntity "online-course.mifwar.com/internal/product_category/entity"
+	productCategoryEntity "online-course.mifwar.com/internal/product_category/entity"
 )
 
 type ProductResponseBody struct {
