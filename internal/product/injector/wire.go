@@ -12,7 +12,7 @@ import (
 	fileUpload "online-course.mifwar.com/pkg/fileupload/cloudinary"
 )
 
-func InitiliazedService(db *gorm.DB) *handler.ProductHandler {
+func InitializedService(db *gorm.DB) *handler.ProductHandler {
 	wire.Build(
 		handler.NewProductHandler,
 		usecase.NewProductUseCase,

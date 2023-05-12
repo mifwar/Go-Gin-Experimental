@@ -1,7 +1,7 @@
 //go:build wireinject
 // +build wireinject
 
-package Cart
+package cart
 
 import (
 	"github.com/google/wire"
@@ -11,7 +11,7 @@ import (
 	usecase "online-course.mifwar.com/internal/cart/usecase"
 )
 
-func InitiliazedService(db *gorm.DB) *handler.CartHandler {
+func InitializedService(db *gorm.DB) *handler.CartHandler {
 	wire.Build(
 		handler.NewCartHandler,
 		repository.NewCartRepository,

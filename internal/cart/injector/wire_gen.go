@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package Cart
+package cart
 
 import (
 	"gorm.io/gorm"
@@ -15,7 +15,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitiliazedService(db *gorm.DB) *cart.CartHandler {
+func InitializedService(db *gorm.DB) *cart.CartHandler {
 	cartRepository := cart2.NewCartRepository(db)
 	cartUseCase := cart3.NewCartUseCase(cartRepository)
 	cartHandler := cart.NewCartHandler(cartUseCase)

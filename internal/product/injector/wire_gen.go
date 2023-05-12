@@ -16,7 +16,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitiliazedService(db *gorm.DB) *product.ProductHandler {
+func InitializedService(db *gorm.DB) *product.ProductHandler {
 	productRepository := product2.NewProductRepository(db)
 	fileUpload := fileupload.NewFileUpload()
 	productUseCase := product3.NewProductUseCase(productRepository, fileUpload)
