@@ -32,13 +32,15 @@ func (handler *OauthHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	result, err := handler.usecase.Login(input)
+	// Memanggil usecase dari login
+	data, err := handler.usecase.Login(input)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, utils.Response(http.StatusBadRequest, "bad request", err.Error()))
+
+		ctx.JSON(http.StatusInternalServerError, utils.Response(http.StatusInternalServerError, "error", err.Error()))
 		ctx.Abort()
 		return
 	}
 
-	ctx.JSON(http.StatusOK, utils.Response(http.StatusOK, "success", result))
+	ctx.JSON(http.StatusOK, utils.Response(http.StatusOK, "ok", data))
 }
