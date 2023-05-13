@@ -4,7 +4,6 @@ import (
 	"database/sql"
 
 	"gorm.io/gorm"
-	orderEntity "online-course.mifwar.com/internal/order/entity"
 	productEntity "online-course.mifwar.com/internal/product/entity"
 	userEntity "online-course.mifwar.com/internal/user/entity"
 )
@@ -12,7 +11,6 @@ import (
 type OrderDetail struct {
 	ID          int64                  `json:"id"`
 	Price       int64                  `json:"price"`
-	Order       *orderEntity.Order     `json:"order" gorm:"foreignKey:OrderID;references:ID"`
 	OrderID     int64                  `json:"order_id"`
 	Product     *productEntity.Product `json:"product" gorm:"foreignKey:ProductID;references:ID"`
 	ProductID   int64                  `json:"product_id"`
