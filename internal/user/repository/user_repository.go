@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	FindAll(offset, limit int) []entity.User
 	FindById(id int) (*entity.User, error)
+	Count() int
 	FindByEmail(email string) (*entity.User, error)
 	Create(entity entity.User) (*entity.User, error)
 	Update(entity entity.User) (*entity.User, error)
@@ -16,6 +17,17 @@ type UserRepository interface {
 
 type UserRepositoryImpl struct {
 	db *gorm.DB
+}
+
+// Count implements UserRepository
+func (repository *UserRepositoryImpl) Count() int {
+	var user entity.User
+
+	var totalUser int64
+
+	repository.db.Model(&user).Count(&totalUser)
+
+	return int(totalUser)
 }
 
 // FindByEmail implements UserRepository
